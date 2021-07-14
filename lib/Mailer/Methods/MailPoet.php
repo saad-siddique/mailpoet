@@ -3,6 +3,7 @@
 namespace MailPoet\Mailer\Methods;
 
 use MailPoet\Config\ServicesChecker;
+use MailPoet\Logging\LoggerFactory;
 use MailPoet\Mailer\Mailer;
 use MailPoet\Mailer\MailerError;
 use MailPoet\Mailer\Methods\Common\BlacklistCheck;
@@ -51,6 +52,11 @@ class MailPoet {
 
     $messageBody = $this->getBody($newsletter, $subscriber, $extraParams);
     $result = $this->api->sendMessages($messageBody);
+    $loggerFactory = LoggerFactory::getInstance();
+    $loggerFactory->getLogger(LoggerFactory::TOPIC_MSS)->addInfo(
+      'Sending task result',
+      ['subscriber' => $subscriber, 'result' => $result]
+    );
 
     switch ($result['status']) {
       case API::SENDING_STATUS_CONNECTION_ERROR:
