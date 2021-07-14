@@ -7,8 +7,8 @@ if [[ -n ${CIRCLE_BRANCH} && ${CIRCLE_BRANCH} != 'release' ]]; then
   echo '[BUILD] Skipping translations'
 else
   echo '[BUILD] Generating translations'
-  ./do translations:pack
 fi
+./do translations:pack
 
 plugin_name='mailpoet'
 
