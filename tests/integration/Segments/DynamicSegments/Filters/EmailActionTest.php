@@ -183,7 +183,7 @@ class EmailActionTest extends \MailPoetTest {
     $this->createStatsNewsletter($subscriberOpenedMachine);
     $open = $this->createStatisticsOpens($subscriberOpenedMachine);
     $open->setUserAgentType(UserAgentEntity::USER_AGENT_TYPE_MACHINE);
-    $userAgent = new UserAgentEntity(UserAgentEntity::USER_AGENT_TYPE_MACHINE);
+    $userAgent = new UserAgentEntity(UserAgentEntity::MACHINE_USER_AGENTS[0]);
     $this->entityManager->persist($userAgent);
     $open->setUserAgent($userAgent);
     $this->entityManager->flush();
