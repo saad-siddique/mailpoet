@@ -104,6 +104,7 @@ class ManageSegmentsCest {
     $i->click('Save');
     $i->waitForElement('[data-automation-id="dynamic-segments-tab"]');
     $i->click('[data-automation-id="dynamic-segments-tab"]');
+    $i->waitForNoticeAndClose('Segment successfully updated');
     $i->waitForText($segmentTitle);
 
     $i->wantTo('Edit existing segment');
@@ -120,6 +121,7 @@ class ManageSegmentsCest {
     $i->click('Save');
     $i->waitForElement('[data-automation-id="dynamic-segments-tab"]');
     $i->click('[data-automation-id="dynamic-segments-tab"]');
+    $i->waitForNoticeAndClose('Segment successfully updated');
     $i->waitForText($segmentEditedTitle);
     $i->seeNoJSErrors();
 
