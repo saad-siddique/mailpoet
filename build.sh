@@ -64,7 +64,6 @@ rm -rf vendor-prefixed/symfony/dependency-injection/Extension
 
 # Copy release folders.
 echo '[BUILD] Copying release folders'
-cp -Rf lang $plugin_name
 cp -RfL assets $plugin_name
 cp -Rf generated $plugin_name
 cp -Rf lib $plugin_name
@@ -74,7 +73,6 @@ cp -Rf vendor-prefixed $plugin_name
 cp -Rf views $plugin_name
 rm -Rf $plugin_name/assets/css/src
 rm -Rf $plugin_name/assets/js/src
-rm -Rf $plugin_name/lang/*.po
 
 # Remove generated PHP files after they were copied for release
 rm -Rf generated/*.php
