@@ -82,11 +82,12 @@ class WooCommerceDynamicSegmentsCest {
     $i->orderProduct($this->productInCategory, $customerEmail);
     $guestEmail = 'guest_1@example.com';
     $i->orderProduct($this->productInCategory, $guestEmail, false);
-    // We need to regenerate lookup tables for correct result
-    $i->cli(['wc', 'tool', 'run', 'regenerate_product_lookup_tables', '--user=1']);
-    $i->wait(1);
 
     $i->login();
+    // We need to regenerate lookup tables for correct result
+    $i->wait(2);
+    $i->cli(['wc', 'tool', 'run', 'regenerate_product_lookup_tables', '--user=1']);
+    $i->cli(['action-scheduler', 'run']);
     $i->wantTo('Check subscriber is in category segment');
     $i->amOnMailpoetPage('Lists');
     $i->click('[data-automation-id="dynamic-segments-tab"]');
@@ -114,11 +115,12 @@ class WooCommerceDynamicSegmentsCest {
     $i->orderProduct($differentProductWithCategory, $customerEmail);
     $guestEmail = 'guest_2@example.com';
     $i->orderProduct($differentProductWithCategory, $guestEmail, false);
-    // We need to regenerate lookup tables for correct result
-    $i->cli(['wc', 'tool', 'run', 'regenerate_product_lookup_tables', '--user=1']);
-    $i->wait(1);
 
     $i->login();
+    // We need to regenerate lookup tables for correct result
+    $i->wait(2);
+    $i->cli(['wc', 'tool', 'run', 'regenerate_product_lookup_tables', '--user=1']);
+    $i->cli(['action-scheduler', 'run']);
     $i->wantTo('Check subscriber is in category segment');
     $i->amOnMailpoetPage('Lists');
     $i->click('[data-automation-id="dynamic-segments-tab"]');
@@ -144,11 +146,12 @@ class WooCommerceDynamicSegmentsCest {
     $i->orderProduct($product1, $customer1Email);
     $guestEmail = 'guest_3@example.com';
     $i->orderProduct($product1, $guestEmail);
-    // We need to regenerate lookup tables for correct result
-    $i->cli(['wc', 'tool', 'run', 'regenerate_product_lookup_tables', '--user=1']);
-    $i->wait(1);
 
     $i->login();
+    // We need to regenerate lookup tables for correct result
+    $i->wait(2);
+    $i->cli(['wc', 'tool', 'run', 'regenerate_product_lookup_tables', '--user=1']);
+    $i->cli(['action-scheduler', 'run']);
     $i->wantTo('Check there is one subscriber in the number of orders segments (the segment was configured to match customers that placed one order in the last day)');
     $i->amOnMailpoetPage('Lists');
     $i->click('[data-automation-id="dynamic-segments-tab"]');
@@ -167,11 +170,12 @@ class WooCommerceDynamicSegmentsCest {
     $i->orderProduct($product, $customerEmail);
     $guestEmail = 'guest_2@example.com';
     $i->orderProduct($product, $guestEmail);
-    // We need to regenerate lookup tables for correct result
-    $i->cli(['wc', 'tool', 'run', 'regenerate_product_lookup_tables', '--user=1']);
-    $i->wait(1);
 
     $i->login();
+    // We need to regenerate lookup tables for correct result
+    $i->wait(2);
+    $i->cli(['wc', 'tool', 'run', 'regenerate_product_lookup_tables', '--user=1']);
+    $i->cli(['action-scheduler', 'run']);
     $i->wantTo('Check that there is one subscriber in the total spent segment');
     $i->amOnMailpoetPage('Lists');
     $i->click('[data-automation-id="dynamic-segments-tab"]');
@@ -190,11 +194,12 @@ class WooCommerceDynamicSegmentsCest {
     $i->orderProduct($product, $customerEmail);
     $guestEmail = 'guest_france@example.com';
     $i->orderProduct($product, $guestEmail, false);
-    // We need to regenerate lookup tables for correct result
-    $i->cli(['wc', 'tool', 'run', 'regenerate_product_lookup_tables', '--user=1']);
-    $i->wait(1);
 
     $i->login();
+    // We need to regenerate lookup tables for correct result
+    $i->wait(2);
+    $i->cli(['wc', 'tool', 'run', 'regenerate_product_lookup_tables', '--user=1']);
+    $i->cli(['action-scheduler', 'run']);
     $i->wantTo('Check that there is one subscriber in customer country segment');
     $i->amOnMailpoetPage('Lists');
     $i->click('[data-automation-id="dynamic-segments-tab"]');
