@@ -339,7 +339,8 @@ jobs:
           command: |
               mkdir -m 777 -p tests/_output/exceptions
               echo $(circleci tests glob "tests/acceptance/**/*Cest.php")
-              circleci tests glob "tests/acceptance/**/*Cest.php" | circleci tests split --split-by=timings > /tmp/tests-to-run
+              circleci tests glob "tests/acceptance/**/*Cest.php" | circleci tests split --split-by=timings --timings-type=classname > /tmp/tests-to-run
+              cat /tmp/tests-to-run
               cd tests/docker
               docker-compose run -e SKIP_DEPS=1 -e CIRCLE_BRANCH=${CIRCLE_BRANCH} -e CIRCLE_JOB=${CIRCLE_JOB} -e MULTISITE=<< parameters.multisite >> codeception /tmp/tests-to-run --steps --debug -vvv --html --xml
       - run:
@@ -449,92 +450,78 @@ workflows:
     jobs:
       - build:
           <<: *slack-fail-post-step
-      - unit_tests:
-          <<: *slack-fail-post-step
-          name: unit_tests
-          requires:
-            - build
-      - static_analysis:
-          <<: *slack-fail-post-step
-          name: static_analysis_php7
-          php_version: 70200
-          requires:
-            - build
-      - static_analysis:
-          <<: *slack-fail-post-step
-          name: static_analysis_php8
-          php_version: 80000
-          requires:
-            - build
-      - qa_js:
-          <<: *slack-fail-post-step
-          requires:
-            - build
-      - qa_php:
-          <<: *slack-fail-post-step
-          requires:
-            - build
-      - qa_php_oldest:
-          <<: *slack-fail-post-step
-          requires:
-            - build
+#      - unit_tests:
+##          <<: *slack-fail-post-step
+#          name: unit_tests
+#          requires:
+#            - build
+#      - static_analysis:
+#          <<: *slack-fail-post-step
+#          name: static_analysis_php7
+#          php_version: 70200
+#          requires:
+#            - build
+#      - static_analysis:
+#          <<: *slack-fail-post-step
+#          name: static_analysis_php8
+#          php_version: 80000
+#          requires:
+#            - build
+#      - qa_js:
+#          <<: *slack-fail-post-step
+#          requires:
+#            - build
+#      - qa_php:
+#          <<: *slack-fail-post-step
+#          requires:
+#            - build
+#      - qa_php_oldest:
+#          <<: *slack-fail-post-step
+#          requires:
+#            - build
       - acceptance_tests:
           <<: *slack-fail-post-step
           name: acceptance_tests
           requires:
-            - unit_tests
-            - static_analysis_php8
-            - qa_js
-            - qa_php
-      - js_tests:
-          <<: *slack-fail-post-step
-          requires:
             - build
-      - integration_tests:
-          <<: *slack-fail-post-step
-          requires:
-            - unit_tests
-            - static_analysis_php8
-            - qa_js
-            - qa_php
-      - acceptance_tests:
-          <<: *slack-fail-post-step
-          <<: *multisite_acceptance_config
-          name: acceptance_tests_multisite
-      - integration_tests:
-          <<: *slack-fail-post-step
-          <<: *only_master_and_release
-          name: integration_tests_multisite
-          setup_command: source ./.circleci/setup.bash && setup php7_multisite
-          run_command: ./do test:multisite-integration --xml
-          requires:
-            - unit_tests
-            - static_analysis_php7
-            - static_analysis_php8
-            - qa_js
-            - qa_php
-      - build_release_zip:
-          <<: *slack-fail-post-step
-          requires:
-            - build
-            - acceptance_tests_1
-            - acceptance_tests_2
-            - acceptance_tests_3
-            - acceptance_tests_4
-            - acceptance_tests_5
-            - acceptance_tests_6
-            - acceptance_tests_7
-            - acceptance_tests_8
-            - acceptance_tests_9
-            - acceptance_tests_10
-            - acceptance_tests_11
-            - acceptance_tests_12
-            - acceptance_tests_13
-            - acceptance_tests_14
-            - acceptance_tests_15
-            - acceptance_tests_16
-            - js_tests
-            - integration_tests
+#            - unit_tests
+#            - static_analysis_php8
+#            - qa_js
+#            - qa_php
+#      - js_tests:
+#          <<: *slack-fail-post-step
+#          requires:
+#            - build
+#      - integration_tests:
+#          <<: *slack-fail-post-step
+#          requires:
+#            - unit_tests
+#            - static_analysis_php8
+#            - qa_js
+#            - qa_php
+#      - acceptance_tests:
+#          <<: *slack-fail-post-step
+#          <<: *multisite_acceptance_config
+#          name: acceptance_tests_multisite
+#      - integration_tests:
+#          <<: *slack-fail-post-step
+#          <<: *only_master_and_release
+#          name: integration_tests_multisite
+#          setup_command: source ./.circleci/setup.bash && setup php7_multisite
+#          run_command: ./do test:multisite-integration --xml
+#          requires:
+#            - unit_tests
+#            - static_analysis_php7
+#            - static_analysis_php8
+#            - qa_js
+#            - qa_php
+#      - build_release_zip:
+#          <<: *slack-fail-post-step
+#          requires:
+#            - build
+#            - acceptance_tests
+#            - js_tests
+#            - integration_tests
 
   nightly:
     triggers:
