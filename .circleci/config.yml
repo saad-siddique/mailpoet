@@ -163,10 +163,10 @@ jobs:
           key: npm-{{ checksum "package-lock.json" }}
           paths:
             - ~/.npm
-      - run:
-          name: Group acceptance tests to run in parallel
-          command: |
-            ./do test:acceptance-group-tests
+#      - run:
+#          name: Group acceptance tests to run in parallel
+#          command: |
+#            ./do test:acceptance-group-tests
       - run:
           name: Download additional WP Plugins for tests
           command: |
@@ -281,7 +281,7 @@ jobs:
         path: test-results/mocha
         destination: mocha
   acceptance_tests:
-    parallelism: 4
+    parallelism: 2
     working_directory: /home/circleci/mailpoet
     machine:
       image: ubuntu-2004:202111-01
@@ -338,11 +338,11 @@ jobs:
           name: Run acceptance tests
           command: |
               mkdir -m 777 -p tests/_output/exceptions
-              echo $(circleci tests glob "tests/acceptance/**/*Cest.php")
-              circleci tests glob "tests/acceptance/**/*Cest.php" | circleci tests split --split-by=timings --timings-type=classname > /tmp/tests-to-run
-              cat /tmp/tests-to-run
+              sed -i.bak 's#/wp-core/wp-content/plugins/mailpoet/##g' $CIRCLE_INTERNAL_TASK_DATA/circle-test-results/results.json
+              EXCLUDE_REGEX=$(circleci tests glob "tests/acceptance/**/*Cest.php" | circleci tests split --split-by=timings | sed 's# #|#g')
+              find ./tests/acceptance -name "*Cest.php"|grep -v -E "$EXCLUDE_REGEX" | xargs rm
               cd tests/docker
-              docker-compose run -e SKIP_DEPS=1 -e CIRCLE_BRANCH=${CIRCLE_BRANCH} -e CIRCLE_JOB=${CIRCLE_JOB} -e MULTISITE=<< parameters.multisite >> codeception /tmp/tests-to-run --steps --debug -vvv --html --xml
+              docker-compose run -e SKIP_DEPS=1 -e CIRCLE_BRANCH=${CIRCLE_BRANCH} -e CIRCLE_JOB=${CIRCLE_JOB} -e MULTISITE=<< parameters.multisite >> codeception --steps --debug -vvv --html --xml
       - run:
           name: Check exceptions
           command: |
