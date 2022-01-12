@@ -27,7 +27,7 @@ chmod -R 777 wp-content/uploads
 
 # disable automatic updates
 wp config set WP_AUTO_UPDATE_CORE false --raw
-
+wp config set automatic_updater_disabled false --raw
 # cleanup database
 mysqladmin --host=mysql --user=root --password=wordpress drop wordpress --force
 mysqladmin --host=mysql --user=root --password=wordpress create wordpress --force
