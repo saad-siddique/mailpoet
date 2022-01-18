@@ -19,6 +19,7 @@ class Segment extends Model {
   public static $_table = MP_SEGMENTS_TABLE; // phpcs:ignore PSR2.Classes.PropertyDeclaration
   const TYPE_WP_USERS = SegmentEntity::TYPE_WP_USERS;
   const TYPE_WC_USERS = SegmentEntity::TYPE_WC_USERS;
+  const TYPE_WC_MEMBERSHIPS = SegmentEntity::TYPE_WC_MEMBERSHIPS;
   const TYPE_DEFAULT = SegmentEntity::TYPE_DEFAULT;
 
   public function __construct() {
@@ -150,6 +151,24 @@ class Segment extends Model {
 
   public static function getWooCommerceSegment() {
     $wcSegment = self::where('type', self::TYPE_WC_USERS)->findOne();
+
+    if ($wcSegment === false) {
+      // create the WooCommerce customers segment
+      $wcSegment = Segment::create();
+      $wcSegment->hydrate([
+        'name' => WPFunctions::get()->__('WooCommerce Customers', 'mailpoet'),
+        'description' =>
+          WPFunctions::get()->__('This list contains all of your WooCommerce customers.', 'mailpoet'),
+        'type' => self::TYPE_WC_USERS,
+      ]);
+      $wcSegment->save();
+    }
+
+    return $wcSegment;
+  }
+
+  public static function getWooMembershipsSegment() {
+    $wcSegment = self::where('type', self::TYPE_WC_MEMBERSHIPS)->findOne();
 
     if ($wcSegment === false) {
       // create the WooCommerce customers segment
